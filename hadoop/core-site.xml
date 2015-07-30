@@ -19,10 +19,10 @@
 <configuration>
   <property>
           <name>fs.defaultFS</name>
-          <value>hdfs://mmdb-hadoop:9000</value>
+          <value>hdfs://node1:9000</value>
   </property>
   <property>
      <name>ha.zookeeper.quorum</name>
-     <value>Slave1:2181</value>
+     <value>node2:2181</value>
   </property>
 </configuration>

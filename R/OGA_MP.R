@@ -3,9 +3,10 @@ start_time <- proc.time()
 ##??ı??Ū??
 #scan(file.choose() )
 #read.table(file.choose(),header=T)
-
-X_data=read.csv("/home/hduser/workspace/R/big_inputx.csv",header=FALSE)
-Y_data=read.csv("/home/hduser/workspace/R/big_input.csv",header=FALSE)
+input_start_time <- proc.time()
+X_data=read.csv("/home/hduser/big_inputx.csv",header=FALSE)
+input_end_time <- proc.time() - input_start_time
+Y_data=read.csv("/home/hduser/big_input.csv",header=FALSE)
 
 X=as.matrix(X_data)
 Y=as.matrix(Y_data)
@@ -70,7 +71,7 @@ library(rmr2)
 library(rhdfs)
 hdfs.init()
 hdfs.mkdir("/hduser/R/lab/input")
-hdfs.put("/home/hduser/workspace/R/big_inputx.csv", "/hduser/R/lab/input")
+hdfs.put("/home/hduser/inputx_t.csv", "/hduser/R/lab/input")
 hdfs.root <- '/hduser/R/lab'
 hdfs.data <- file.path(hdfs.root, 'input')
 hdfs.out <- file.path(hdfs.root, 'output')
@@ -78,35 +79,41 @@ mr_set_time=proc.time()-mr_set_start
 # MapReduce Function
 
 corrMax <- function(input, output=NULL){
-
-    inputfile = make.input.format("csv", sep = ",")
-    mapreduce(input=input, output=output, input.format=inputfile,
-              map = function(k, v){
-
-                corr = abs(cor(v, Y, method="spearman"))
-                keyval(1, corr)
-              },
-              reduce=function(k, vv) {
-                maxIndex =  which(vv == max(vv), arr.ind = TRUE) # get the max value index
-                keyval(k, maxIndex[1])
-              })
+  
+  inputfile = make.input.format("csv", sep = ",")
+  mapreduce(input=input, output=output, input.format=inputfile,
+            map = function(k, v){
+              
+              x = t(as.matrix(v))
+              corr = abs(cor(x, Y, method="spearman"))
+              keyval(1, corr)
+              #  keyval(1,abs(v))
+            },
+            reduce=function(k, vv) {
+             # maxIndex =  which(vv == max(vv), arr.ind = TRUE) # get the max value index
+              #keyval(k, maxIndex[1])
+              keyval(1,max(vv))
+            })
 }
-
 used_column=array(0,dim=c(1,X_size))
 
+while (iteration_time<=iteration_time_limit)  #iteration_time_limit
+{
   mr_start <- proc.time()
+
   out <- corrMax(hdfs.data, hdfs.out)
   result <- from.dfs(out)
   num = result$val
   hdfs.delete(hdfs.out)
   mr_end <- proc.time()-mr_start
-
-  message("num ", as.character(num));
+  
+  message("num :", as.character(num));
+  message("time :", as.character(mr_end[3]));
   predictor[1,w]=num
-
+  
   ##?ֿn?^?k?x?}
   X_iteration = X[,num];
-
+  
   if (iteration_time==1)
   {
     X_iteration_cum =X_iteration;
@@ -114,29 +121,29 @@ used_column=array(0,dim=c(1,X_size))
   {
     X_iteration_cum = cbind(X_iteration_cum,X_iteration)
   }
-
-
+  
+  
   #?Dbeta??
   XtX=t(X_iteration_cum)%*%X_iteration_cum
   beta=solve(XtX) %*% t(X_iteration_cum) %*% Y_origin
   Y = Y_origin - (X_iteration_cum%*%beta)
-
+  
   #HDIC?[?c
   for(i in 1:Y_size)
   {
     tmp=as.integer(Y[i,1]^2)
     res=res+tmp
   }
-
+  
   temp_HDIC=( Y_size * ( log( res/Y_size) ) )+( iteration_time * wn *log(X_size) );
   tmp_HDIC_mat[1,w]=temp_HDIC
-
+  
   if (temp_HDIC < HDIC_min)
   {
     HDIC_min=temp_HDIC
     HDIC=iteration_time
   }
-
+  
   #?]?߰j?????Ҥ??k?s
   used_column[1,num]=1
   iteration_time=iteration_time+1
@@ -144,14 +151,12 @@ used_column=array(0,dim=c(1,X_size))
   w=w+1
   res=0
   corr=0
-#}
+}
 
 end_time <- proc.time() - start_time
+message("Total time: ", end_time[3])
 
 w=1
-message("Total time: ", end_time)
-message("MR time", mr_end)
-message("MR set", mr_set_time)
 #
 # trim_beta = array(,dim=c(HDIC-1,1))
 # Residual=array(,dim=c(Y_size,1))

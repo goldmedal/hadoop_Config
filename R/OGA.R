@@ -4,9 +4,9 @@ start_time <- proc.time()
 #scan(file.choose() )
 #read.table(file.choose(),header=T)
 input_start_time <- proc.time()
-X_data=read.csv("/home/hduser/otherHD/sda3/big_inputx.csv",header=FALSE)
+X_data=read.csv("/home/hduser/git/hadoop_Config/R/inputx.csv",header=FALSE)
 input_end_time <- proc.time() - input_start_time
-Y_data=read.csv("/home/hduser/otherHD/sda3/big_input.csv",header=FALSE)
+Y_data=read.csv("/home/hduser/git/hadoop_Config/R/input.csv",header=FALSE)
 
 X=as.matrix(X_data)
 Y=as.matrix(Y_data)
@@ -67,7 +67,7 @@ used_column=array(0,dim=c(1,X_size))
 
 #while (iteration_time<=iteration_time_limit)  #iteration_time_limit
 #{
-  mp_start <- proc.time()
+  mr_start <- proc.time()
 # ######### Original Code ##########
 
   for(i in 1:X_size)  #X_size
@@ -86,10 +86,10 @@ used_column=array(0,dim=c(1,X_size))
 #####################################
   
 
-  mp_end <- proc.time()-mp_start
-  
+  mr_end <- proc.time()-mr_start
+  message("amx :", as.character(corr_max));
   message("num :", as.character(num));
-  message("time :", as.character(mp_end[3]));
+  message("time :", as.character(mr_end[3]));
   predictor[1,w]=num
 
   ##?ֿn?^?k?x?}

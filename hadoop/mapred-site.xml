@@ -21,4 +21,37 @@
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
     </property>
+    <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>node1:10020</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>node1:19888</value>
+    </property>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>8192</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>8192</value>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>-Xmx3032m</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx7012m</value>
+    </property>
+    <property>
+        <name>mapred.map.tasks</name>
+        <value>4</value>
+    </property>
+    <property>
+        <name>mapred.reduce.tasks</name>
+        <value>4</value>
+    </property>
+
 </configuration>
