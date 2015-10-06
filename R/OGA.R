@@ -4,9 +4,9 @@ start_time <- proc.time()
 #scan(file.choose() )
 #read.table(file.choose(),header=T)
 input_start_time <- proc.time()
-X_data=read.csv("/home/hduser/git/hadoop_Config/R/inputx.csv",header=FALSE)
+X_data=read.csv("/home/hduser/git/hadoop_Config/R/inputx.csv.ten",header=FALSE)
 input_end_time <- proc.time() - input_start_time
-Y_data=read.csv("/home/hduser/git/hadoop_Config/R/input.csv",header=FALSE)
+Y_data=read.csv("/home/hduser/git/hadoop_Config/R/input.csv.ten",header=FALSE)
 
 X=as.matrix(X_data)
 Y=as.matrix(Y_data)

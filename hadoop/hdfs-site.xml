@@ -57,5 +57,9 @@
       <name>dfs.ha.automatic-failover.enabled</name>
       <value>true</value>
   </property>
+  <property>
+      <name>dfs.blocksize</name>
+      <value>128M</value>
+  </property>
 
 </configuration>

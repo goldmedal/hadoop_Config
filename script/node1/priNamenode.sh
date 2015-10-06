@@ -1,0 +1,1 @@
+echo $HADOOP_HOME

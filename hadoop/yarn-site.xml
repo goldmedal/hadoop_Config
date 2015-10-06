@@ -65,4 +65,25 @@
         <name>yarn.log-aggregation-enable</name>
         <value>true</value>
     </property>
+     <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>6144</value>
+    </property>
+     <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>3072</value>
+    </property>
+     <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>6144</value>
+    </property>
+     <property>
+        <name>yarn.app.mapreduce.am.resource.bm</name>
+        <value>6144</value>
+    </property>
+     <property>
+        <name>yarn.app.mapreduce.am.command-opt</name>
+        <value>4915</value>
+    </property>
+
 </configuration>
