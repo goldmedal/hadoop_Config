@@ -1,0 +1,1 @@
+install.packages(c("codetools", "R", "Rcpp", "RJSONIO", "bitops", "digest", "functional", "stringr", "plyr", "reshape2", "rJava", "caTools", "RImpala", "dplyr", "R.methodsS3", "Hmisc", "memoise", "lazyeval", "rjson"), repos="http://ftp.yzu.edu.tw/CRAN/")
